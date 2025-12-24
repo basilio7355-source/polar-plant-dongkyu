@@ -44,17 +44,24 @@ def find_file_by_name(directory: Path, target_name: str):
 @st.cache_data
 def load_environment_data():
     data_dir = Path("data")
+
     school_files = {}
-    for f in data_dir.iterdir():
-        if f.suffix == ".csv":
-            school_name = f.stem.split("_")[0]
-            school_files[school_name] = f
+    target_files = [
+        "송도고_환경데이터.csv",
+        "하늘고_환경데이터.csv",
+        "아라고_환경데이터.csv",
+        "동산고_환경데이터.csv",
+    ]
 
-    env_data = {}
-    for school, path in school_files.items():
-        env_data[school] = pd.read_csv(path)
+    for name in target_files:
+        file_path = find_file_by_name(data_dir, name)
+        if file_path is None:
+            return None
+        school = name.split("_")[0]
+        school_files[school] = pd.read_csv(file_path)
 
-    return env_data
+    return school_files
+
 
 @st.cache_data
 def load_growth_data():
